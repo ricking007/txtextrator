@@ -2,13 +2,13 @@ $(document).ready(function () {
     $('.table-import').DataTable({
         dom: 'Bfrtip',
         responsive: true,
-        "lengthMenu": [[20,10,15,25, 50, -1], [20,10,15,25, 50, 'Tudo']],
-        pageLength : 10,
-        "columnDefs": [ { "targets": 2, "orderable": false } ],
+        "lengthMenu": [[20, 10, 15, 25, 50, -1], [20, 10, 15, 25, 50, 'Tudo']],
+        pageLength: 10,
+        "columnDefs": [{"targets": 2, "orderable": false}],
         "language": {
             "url": "json/datatables-Portuguese-Brasil.json"
         },
-        
+
         buttons: [
             'pageLength', 'copy', 'csv', 'excel', 'pdf', 'print'
         ]
@@ -19,13 +19,16 @@ $('#form-import').on('submit', function (e) {
     e.preventDefault();
     $('#progresso').text('0%').attr('aria-valuenow', 0).css('width', '0');
     var file = $("#arquivo")[0].files[0];
+
+    var t = $('#export').DataTable();
+    var counter = 1;
+
     var reader = new FileReader();
     reader.onload = function (progressEvent) {
         // By lines
         var l = this.result.split('\n');
         for (var ln = 0; ln < l.length; ln++) {
             (function () {
-
                 var ean_txt = l[ln];
                 var url = "participantes.xlsx";
                 var oReq = new XMLHttpRequest();
@@ -53,24 +56,22 @@ $('#form-import').on('submit', function (e) {
                             i++;
                             var cd_ean = lines[index]['Nº do código de barras'];
                             if (cd_ean == ean_txt) {
-                                console.log(lines[index]['Nome']);
-
                                 var porcentagem = i * 100 / lines.length;
                                 $('#progresso').attr('aria-valuenow', porcentagem).css('width', porcentagem + '%');
-                                var $tr = $('<tr></tr>');
-                                var $td = 
-                                        '<td>' + (lines[index]['Nº do pedido'] ? lines[index]['Nº do pedido'] : "") + '</td>'
-                                        +'<td>'+ (lines[index]['Nome'] ? lines[index]['Nome'] : "") + '</td>'
-                                        +'<td>'+ (lines[index]['Sobrenome'] ? lines[index]['Sobrenome'] : "") + '</td>'
-                                        +'<td>'+ (lines[index]['Email'] ? lines[index]['Email'] : "") + '</td>'
-                                        +'<td>'+ (lines[index]['Nº do código de barras'] ? lines[index]['Nº do código de barras'] : "") + '</td>'
-                                        +'<td>'+ (lines[index]['Celular'] ? lines[index]['Celular'] : "") + '</td>'
-                                        +'<td>'+ (lines[index]['Sexo'] ? lines[index]['Sexo'] : "") + '</td>'
-                                        +'<td>'+ (lines[index]['Idade'] ? lines[index]['Idade'] : "") + '</td>'
-                                        +'<td>'+ (lines[index]['Já fechou seu intercâmbio?'] ? lines[index]['Já fechou seu intercâmbio?'] : "") + '</td>'
-                                        +'<td>'+ (lines[index]['Qual sua expectativa para o E-DublinXP?'] ? lines[index]['Qual sua expectativa para o E-DublinXP?'] : "") + '</td>';
-                                $tr.html($td);
-                                $("#report-import").find('table tbody').append($tr);
+                                t.row.add([
+                                    '<td>' + (lines[index]['Nº do pedido'] ? lines[index]['Nº do pedido'] : "") + '</td>',
+                                    '<td>' + (lines[index]['Nome'] ? lines[index]['Nome'] : "") + '</td>',
+                                    '<td>' + (lines[index]['Sobrenome'] ? lines[index]['Sobrenome'] : "") + '</td>',
+                                    '<td>' + (lines[index]['Email'] ? lines[index]['Email'] : "") + '</td>',
+                                    '<td>' + (lines[index]['Nº do código de barras'] ? lines[index]['Nº do código de barras'] : "") + '</td>',
+                                    '<td>' + (lines[index]['Celular'] ? lines[index]['Celular'] : "") + '</td>',
+                                    '<td>' + (lines[index]['Sexo'] ? lines[index]['Sexo'] : "") + '</td>',
+                                    '<td>' + (lines[index]['Idade'] ? lines[index]['Idade'] : "") + '</td>',
+                                    '<td>' + (lines[index]['Já fechou seu intercâmbio?'] ? lines[index]['Já fechou seu intercâmbio?'] : "") + '</td>',
+                                    '<td>' + (lines[index]['Qual sua expectativa para o E-DublinXP?'] ? lines[index]['Qual sua expectativa para o E-DublinXP?'] : "") + '</td>'
+
+                                ]).draw(false);
+                                counter++;
                             }
                         })(line);
                     }

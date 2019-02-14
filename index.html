@@ -15,6 +15,7 @@
             <p>Extraia dados da planilha com o ean txt!</p> 
         </div>
         <div class="container">
+            <div class="row">
             <h2>Consultar cadastros na planilha</h2>
             <p>Certifique-se de que a planilha está no diretório “./xls/planilha.xls” caso a planilha não seja localizado retornará erro. </p>
             <form method="post" id="form-import" enctype="multipart/form-data" method="post">
@@ -47,7 +48,7 @@
                         </div><!-- /.box-header -->
                         <div class="box-body ">
                             <table class="table table-condensed table-striped table-hover table-import 
-                                   table-bordered dt-responsive nowrap">
+                                   table-bordered dt-responsive" id="export">
                                 <thead>
                                     <tr>
                                         <th>Nº do pedido</th>
@@ -62,7 +63,7 @@
                                         <th>Qual sua expectativa para o E-DublinXP?</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="tbody-tr">
 
                                 </tbody>
                             </table>
@@ -74,6 +75,7 @@
                     </div><!-- /.box -->
                 </div>
             </form>
+        </div>
         </div>
     </body>
     <footer>
